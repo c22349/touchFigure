@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static const String appName = 'Routine App';
+  static const String appName = 'Touch Figure';
   static const Color seedColor = Colors.deepPurple;
 }
