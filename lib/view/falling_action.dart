@@ -15,7 +15,16 @@ class _MyHomePageState extends State<FallingAction> {
 
   void _incrementCounter() {
     setState(() {
-      _circlePosition = _circlePosition == -100.0 ? 0.0 : -100.0; // 位置を切り替え
+      // 画面の高さを取得して、円が下まで移動するように設定
+      double screenHeight = MediaQuery.of(context).size.height;
+      _circlePosition = screenHeight + 50.0; // 画面の下まで突き抜ける
+    });
+
+    // アニメーションが終了した後に初期位置に戻す
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _circlePosition = -100.0; // 初期位置に戻す
+      });
     });
   }
 
