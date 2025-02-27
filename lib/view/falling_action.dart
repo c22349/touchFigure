@@ -12,10 +12,13 @@ class FallingAction extends StatefulWidget {
 
 class _MyHomePageState extends State<FallingAction> {
   double _circlePosition = -100.0; // 初期位置を設定
+  bool _isAnimating = false; // アニメーション中かどうかを示すフラグ
 
   void _incrementCounter() {
+    if (_isAnimating) return; // アニメーション中は何もしない
+
     setState(() {
-      // 画面の高さを取得して、円が下まで移動するように設定
+      _isAnimating = true; // アニメーション開始
       double screenHeight = MediaQuery.of(context).size.height;
       _circlePosition = screenHeight + 50.0; // 画面の下まで突き抜ける
     });
@@ -24,6 +27,7 @@ class _MyHomePageState extends State<FallingAction> {
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _circlePosition = -100.0; // 初期位置に戻す
+        _isAnimating = false; // アニメーション終了
       });
     });
   }
