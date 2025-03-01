@@ -26,9 +26,10 @@ class _MyHomePageState extends State<FallingAction> {
     // アニメーションが終了した後に初期位置に戻す
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
-        _circlePosition = -100.0; // 初期位置に戻す
         _isAnimating = false; // アニメーション終了
       });
+      // アニメーション終了後に位置をリセット
+      _circlePosition = -100.0; // 初期位置に戻す
     });
   }
 
@@ -46,12 +47,15 @@ class _MyHomePageState extends State<FallingAction> {
               duration: const Duration(seconds: 1),
               top: _circlePosition,
               left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: AppConstants.circleColor,
-                  shape: BoxShape.circle,
+              child: Visibility(
+                visible: _isAnimating, // アニメーション中のみ表示
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppConstants.circleColor,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),
