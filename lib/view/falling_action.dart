@@ -11,25 +11,30 @@ class FallingAction extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<FallingAction> {
-  double _circlePosition = -100.0; // 初期位置を設定
-  bool _isAnimating = false; // アニメーション中かどうかを示すフラグ
+  List<double> _circlePositions = []; // 円の位置を管理するリスト
 
   void _incrementCounter() {
-    if (_isAnimating) return; // アニメーション中は何もしない
-
     setState(() {
-      _isAnimating = true; // アニメーション開始
-      double screenHeight = MediaQuery.of(context).size.height;
-      _circlePosition = screenHeight + 50.0; // 画面の下まで突き抜ける
+      _circlePositions.add(-100.0); // 新しい円を初期位置に追加
     });
 
-    // アニメーションが終了した後に初期位置に戻す
-    Future.delayed(const Duration(seconds: 1), () {
+    // 各円のアニメーションを開始
+    Future.delayed(Duration.zero, () {
       setState(() {
-        _isAnimating = false; // アニメーション終了
+        if (_circlePositions.isNotEmpty) {
+          _circlePositions[_circlePositions.length - 1] =
+              MediaQuery.of(context).size.height + 50.0; // 画面の下まで移動
+        }
       });
-      // アニメーション終了後に位置をリセット
-      _circlePosition = -100.0; // 初期位置に戻す
+
+      // アニメーションが終了した後に円を削除
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          if (_circlePositions.isNotEmpty) {
+            _circlePositions.removeAt(0); // 最初の円を削除
+          }
+        });
+      });
     });
   }
 
@@ -42,24 +47,22 @@ class _MyHomePageState extends State<FallingAction> {
       ),
       body: Center(
         child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: const Duration(seconds: 1),
-              top: _circlePosition,
-              left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
-              child: Visibility(
-                visible: _isAnimating, // アニメーション中のみ表示
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppConstants.circleColor,
-                    shape: BoxShape.circle,
+          children:
+              _circlePositions.map((position) {
+                return AnimatedPositioned(
+                  duration: const Duration(seconds: 1),
+                  top: position,
+                  left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppConstants.circleColor,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ],
+                );
+              }).toList(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
