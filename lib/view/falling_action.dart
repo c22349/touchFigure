@@ -12,10 +12,12 @@ class FallingAction extends StatefulWidget {
 
 class _MyHomePageState extends State<FallingAction> {
   List<double> _circlePositions = []; // 円の位置を管理するリスト
+  List<int> _circleKeys = []; // 各円の識別子を管理するリスト
 
   void _incrementCounter() {
     setState(() {
       _circlePositions.add(-100.0); // 新しい円を初期位置に追加
+      _circleKeys.add(DateTime.now().millisecondsSinceEpoch); // 識別子を追加
     });
 
     // 各円のアニメーションを開始
@@ -32,6 +34,7 @@ class _MyHomePageState extends State<FallingAction> {
         setState(() {
           if (_circlePositions.isNotEmpty) {
             _circlePositions.removeAt(0); // 最初の円を削除
+            _circleKeys.removeAt(0); // 識別子も削除
           }
         });
       });
@@ -47,22 +50,22 @@ class _MyHomePageState extends State<FallingAction> {
       ),
       body: Center(
         child: Stack(
-          children:
-              _circlePositions.map((position) {
-                return AnimatedPositioned(
-                  duration: const Duration(seconds: 1),
-                  top: position,
-                  left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppConstants.circleColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                );
-              }).toList(),
+          children: List.generate(_circlePositions.length, (index) {
+            return AnimatedPositioned(
+              key: ValueKey(_circleKeys[index]), // 識別子をキーとして使用
+              duration: const Duration(seconds: 1),
+              top: _circlePositions[index],
+              left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: AppConstants.circleColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          }),
         ),
       ),
       floatingActionButton: FloatingActionButton(
