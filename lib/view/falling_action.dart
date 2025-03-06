@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:touchfigure/app_constants.dart';
 
@@ -13,11 +14,13 @@ class FallingAction extends StatefulWidget {
 class _MyHomePageState extends State<FallingAction> {
   List<double> _circlePositions = []; // 円の位置を管理するリスト
   List<int> _circleKeys = []; // 各円の識別子を管理するリスト
+  List<Color> _circleColors = []; // 各円の色を管理するリスト
 
   void _incrementCounter() {
     setState(() {
       _circlePositions.add(-100.0); // 新しい円を初期位置に追加
       _circleKeys.add(DateTime.now().millisecondsSinceEpoch); // 識別子を追加
+      _circleColors.add(_getRandomColor()); // ランダムな色を追加
     });
 
     // 各円のアニメーションを開始
@@ -35,10 +38,16 @@ class _MyHomePageState extends State<FallingAction> {
           if (_circlePositions.isNotEmpty) {
             _circlePositions.removeAt(0); // 最初の円を削除
             _circleKeys.removeAt(0); // 識別子も削除
+            _circleColors.removeAt(0); // 色も削除
           }
         });
       });
     });
+  }
+
+  Color _getRandomColor() {
+    final colors = [Colors.blue, Colors.red, Colors.yellow];
+    return colors[Random().nextInt(colors.length)];
   }
 
   @override
@@ -60,7 +69,7 @@ class _MyHomePageState extends State<FallingAction> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: AppConstants.circleColor,
+                  color: _circleColors[index], // ランダムな色を使用
                   shape: BoxShape.circle,
                 ),
               ),
