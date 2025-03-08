@@ -12,13 +12,17 @@ class FallingAction extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<FallingAction> {
-  List<double> _circlePositions = []; // 円の位置を管理するリスト
+  List<double> _circlePositions = []; // 円の縦位置を管理するリスト
+  List<double> _circleHorizontalPositions = []; // 円の横位置を管理するリスト
   List<int> _circleKeys = []; // 各円の識別子を管理するリスト
   List<Color> _circleColors = []; // 各円の色を管理するリスト
 
   void _incrementCounter() {
     setState(() {
       _circlePositions.add(-100.0); // 新しい円を初期位置に追加
+      _circleHorizontalPositions.add(
+        _getRandomHorizontalPosition(),
+      ); // ランダムな横位置を追加
       _circleKeys.add(DateTime.now().millisecondsSinceEpoch); // 識別子を追加
       _circleColors.add(_getRandomColor()); // ランダムな色を追加
     });
@@ -37,6 +41,7 @@ class _MyHomePageState extends State<FallingAction> {
         setState(() {
           if (_circlePositions.isNotEmpty) {
             _circlePositions.removeAt(0); // 最初の円を削除
+            _circleHorizontalPositions.removeAt(0); // 横位置も削除
             _circleKeys.removeAt(0); // 識別子も削除
             _circleColors.removeAt(0); // 色も削除
           }
@@ -48,6 +53,11 @@ class _MyHomePageState extends State<FallingAction> {
   Color _getRandomColor() {
     final colors = [Colors.blue, Colors.red, Colors.yellow];
     return colors[Random().nextInt(colors.length)];
+  }
+
+  double _getRandomHorizontalPosition() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Random().nextDouble() * (screenWidth - 50); // 画面幅に基づいてランダムな位置を計算
   }
 
   @override
@@ -64,7 +74,7 @@ class _MyHomePageState extends State<FallingAction> {
               key: ValueKey(_circleKeys[index]), // 識別子をキーとして使用
               duration: const Duration(seconds: 1),
               top: _circlePositions[index],
-              left: MediaQuery.of(context).size.width / 2 - 25, // 中央に配置
+              left: _circleHorizontalPositions[index], // ランダムな横位置を使用
               child: Container(
                 width: 50,
                 height: 50,
