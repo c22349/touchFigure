@@ -51,8 +51,9 @@ class _MyHomePageState extends State<FallingAction> {
   }
 
   Color _getRandomColor() {
-    final colors = [Colors.blue, Colors.red, Colors.yellow];
-    return colors[Random().nextInt(colors.length)];
+    return AppConstants.circleColors[Random().nextInt(
+      AppConstants.circleColors.length,
+    )];
   }
 
   double _getRandomHorizontalPosition() {
