@@ -76,12 +76,22 @@ class _MyHomePageState extends State<FallingAction> {
               duration: const Duration(seconds: 1),
               top: _circlePositions[index],
               left: _circleHorizontalPositions[index], // ランダムな横位置を使用
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: _circleColors[index], // ランダムな色を使用
-                  shape: BoxShape.circle,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _circlePositions.removeAt(index); // タップされた円を削除
+                    _circleHorizontalPositions.removeAt(index);
+                    _circleKeys.removeAt(index);
+                    _circleColors.removeAt(index);
+                  });
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: _circleColors[index], // ランダムな色を使用
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             );
