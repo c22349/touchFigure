@@ -19,48 +19,79 @@ class _MyHomePageState extends State<FallingAction> {
   List<Color> _circleColors = []; // 各円の色を管理するリスト
   List<bool> _isExploding = []; // 破裂アニメーションの状態を管理
   int _tapCount = 0; // タップ回数を管理
-  int _buttonPressCount = 0; // 追加：ボタンを押した回数を管理
+  int _buttonPressCount = 0; // ボタンを押した回数を管理
   Timer? _resetTimer; // タイマーを管理
-  Timer? _buttonResetTimer; // 追加：ボタンカウント用のタイマー
+  Timer? _buttonResetTimer; // ボタンカウント用のタイマー
   bool _showCount = false; // カウント表示の制御
+  bool _isButtonPressed = false; // ボタンが押されているかの状態を管理
 
   @override
   void dispose() {
     _resetTimer?.cancel();
-    _buttonResetTimer?.cancel(); // 追加：タイマーの解放
+    _buttonResetTimer?.cancel();
     super.dispose();
   }
 
-  void _incrementCounter() {
+  void _startButtonPress() {
     setState(() {
+      _isButtonPressed = true;
       _buttonPressCount++;
-      _circlePositions.add(-100.0);
-      _circleHorizontalPositions.add(_getRandomHorizontalPosition());
-      _circleKeys.add(DateTime.now().millisecondsSinceEpoch);
-      _circleColors.add(_getRandomColor());
-      _isExploding.add(false);
+    });
+  }
+
+  void _endButtonPress() {
+    setState(() {
+      _isButtonPressed = false;
     });
 
     // 既存のタイマーをキャンセル
     _buttonResetTimer?.cancel();
 
-    // 2秒後にボタンカウントをリセット
-    _buttonResetTimer = Timer(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _buttonPressCount = 0;
+    // 1.5秒後に円を生成
+    _buttonResetTimer = Timer(const Duration(milliseconds: 1500), () {
+      if (!mounted) return;
+
+      final count = _buttonPressCount;
+      setState(() {
+        _buttonPressCount = 0;
+      });
+
+      // 円を順番に生成
+      for (int i = 0; i < count; i++) {
+        Future.delayed(Duration(milliseconds: i * 100), () {
+          if (mounted) _addCircle();
         });
       }
     });
+  }
 
-    // 各円のアニメーションを開始
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        if (_circlePositions.isNotEmpty) {
-          _circlePositions[_circlePositions.length - 1] =
-              MediaQuery.of(context).size.height + 50.0;
-        }
-      });
+  void _addCircle() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // 最初の位置を画面上部に設定
+    final initialPosition = -50.0; // 画面上部から少し上に配置
+    final finalPosition = screenHeight - 50.0; // 画面下部に到達する位置
+
+    setState(() {
+      _circlePositions.add(initialPosition);
+      _circleHorizontalPositions.add(
+        Random().nextDouble() * (screenWidth - 50),
+      );
+      _circleKeys.add(DateTime.now().millisecondsSinceEpoch);
+      _circleColors.add(_getRandomColor());
+      _isExploding.add(false);
+    });
+
+    // アニメーションの開始を少し遅らせる
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        setState(() {
+          if (_circlePositions.isNotEmpty) {
+            _circlePositions[_circlePositions.length - 1] = finalPosition;
+          }
+        });
+      }
     });
   }
 
@@ -71,6 +102,7 @@ class _MyHomePageState extends State<FallingAction> {
   }
 
   double _getRandomHorizontalPosition() {
+    // BuildContextが利用可能な状態で実行されることを保証
     final screenWidth = MediaQuery.of(context).size.width;
     return Random().nextDouble() * (screenWidth - 50); // 画面幅に基づいてランダムな位置を計算
   }
@@ -144,7 +176,7 @@ class _MyHomePageState extends State<FallingAction> {
       body: Center(
         child: Stack(
           children: [
-            if (_buttonPressCount > 0) // 修正：カウントが0より大きい時のみ表示
+            if (_buttonPressCount > 0)
               Center(
                 child: Text(
                   '$_buttonPressCount',
@@ -157,7 +189,7 @@ class _MyHomePageState extends State<FallingAction> {
             ...List.generate(_circlePositions.length, (index) {
               return AnimatedPositioned(
                 key: ValueKey(_circleKeys[index]),
-                duration: const Duration(seconds: 3),
+                duration: const Duration(seconds: 2),
                 top: _circlePositions[index],
                 left: _circleHorizontalPositions[index],
                 child: GestureDetector(
@@ -180,10 +212,15 @@ class _MyHomePageState extends State<FallingAction> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: GestureDetector(
+        onTapDown: (_) => _startButtonPress(),
+        onTapUp: (_) => _endButtonPress(),
+        onTapCancel: () => _endButtonPress(),
+        child: FloatingActionButton(
+          onPressed: null, // GestureDetectorで制御するためnullに設定
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
