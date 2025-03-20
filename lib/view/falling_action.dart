@@ -24,6 +24,7 @@ class _MyHomePageState extends State<FallingAction> {
   Timer? _buttonResetTimer; // ボタンカウント用のタイマー
   bool _showCount = false; // カウント表示の制御
   bool _isButtonPressed = false; // ボタンが押されているかの状態を管理
+  String? _countdownText; // カウントダウンテキストを管理
 
   @override
   void dispose() {
@@ -47,7 +48,7 @@ class _MyHomePageState extends State<FallingAction> {
     // 既存のタイマーをキャンセル
     _buttonResetTimer?.cancel();
 
-    // 1.5秒後に円を生成
+    // 1.5秒後にカウントダウン開始
     _buttonResetTimer = Timer(const Duration(milliseconds: 1500), () {
       if (!mounted) return;
 
@@ -56,10 +57,46 @@ class _MyHomePageState extends State<FallingAction> {
         _buttonPressCount = 0;
       });
 
-      // 円を順番に生成
-      for (int i = 0; i < count; i++) {
-        Future.delayed(Duration(milliseconds: i * 100), () {
-          if (mounted) _addCircle();
+      // カウントダウン開始
+      _startCountdown(count);
+    });
+  }
+
+  void _startCountdown(int circleCount) {
+    int count = 3;
+
+    // 3秒間のカウントダウン
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      setState(() {
+        _countdownText = count.toString();
+      });
+
+      count--;
+
+      if (count < 0) {
+        timer.cancel();
+        setState(() {
+          _countdownText = 'START!';
+        });
+
+        // START!表示後、円を生成
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _countdownText = null;
+            });
+            // 円を順番に生成
+            for (int i = 0; i < circleCount; i++) {
+              Future.delayed(Duration(milliseconds: i * 100), () {
+                if (mounted) _addCircle();
+              });
+            }
+          }
         });
       }
     });
@@ -183,6 +220,17 @@ class _MyHomePageState extends State<FallingAction> {
                   style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            if (_countdownText != null)
+              Center(
+                child: Text(
+                  _countdownText!,
+                  style: const TextStyle(
+                    fontSize: 72,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
                   ),
                 ),
               ),
