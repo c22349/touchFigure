@@ -237,7 +237,7 @@ class _MyHomePageState extends State<FallingAction> {
             ...List.generate(_circlePositions.length, (index) {
               return AnimatedPositioned(
                 key: ValueKey(_circleKeys[index]),
-                duration: const Duration(seconds: 2),
+                duration: const Duration(seconds: 3),
                 top: _circlePositions[index],
                 left: _circleHorizontalPositions[index],
                 child: GestureDetector(
