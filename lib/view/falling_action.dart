@@ -110,6 +110,10 @@ class _MyHomePageState extends State<FallingAction> {
     final initialPosition = -50.0; // 画面上部から少し上に配置
     final finalPosition = screenHeight - 50.0; // 画面下部に到達する位置
 
+    // 2から4秒の間で0.5秒刻みのランダムな時間を生成
+    final randomDuration =
+        (Random().nextInt(5) + 4) * 0.5; // 4から8の間の0.5刻みの数値を生成
+
     setState(() {
       _circlePositions.add(initialPosition);
       _circleHorizontalPositions.add(
@@ -237,7 +241,9 @@ class _MyHomePageState extends State<FallingAction> {
             ...List.generate(_circlePositions.length, (index) {
               return AnimatedPositioned(
                 key: ValueKey(_circleKeys[index]),
-                duration: const Duration(seconds: 3),
+                duration: Duration(
+                  milliseconds: ((Random().nextInt(5) + 4) * 500).toInt(),
+                ),
                 top: _circlePositions[index],
                 left: _circleHorizontalPositions[index],
                 child: GestureDetector(
