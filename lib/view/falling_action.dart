@@ -142,12 +142,6 @@ class _MyHomePageState extends State<FallingAction> {
     )];
   }
 
-  double _getRandomHorizontalPosition() {
-    // BuildContextが利用可能な状態で実行されることを保証
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Random().nextDouble() * (screenWidth - 50); // 画面幅に基づいてランダムな位置を計算
-  }
-
   void _handleTap(int index) {
     setState(() {
       _tapCount++;
