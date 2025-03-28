@@ -48,8 +48,8 @@ class _MyHomePageState extends State<FallingAction> {
     // 既存のタイマーをキャンセル
     _buttonResetTimer?.cancel();
 
-    // 1.5秒後にカウントダウン開始
-    _buttonResetTimer = Timer(const Duration(milliseconds: 1500), () {
+    // 1秒後にカウントダウン開始
+    _buttonResetTimer = Timer(const Duration(milliseconds: 1000), () {
       if (!mounted) return;
 
       final count = _buttonPressCount;
