@@ -23,7 +23,6 @@ class _MyHomePageState extends State<FallingAction> {
   Timer? _resetTimer; // タイマーを管理
   Timer? _buttonResetTimer; // ボタンカウント用のタイマー
   bool _showCount = false; // カウント表示の制御
-  bool _isButtonPressed = false; // ボタンが押されているかの状態を管理
   String? _countdownText; // カウントダウンテキストを管理
 
   @override
@@ -35,16 +34,11 @@ class _MyHomePageState extends State<FallingAction> {
 
   void _startButtonPress() {
     setState(() {
-      _isButtonPressed = true;
       _buttonPressCount++;
     });
   }
 
   void _endButtonPress() {
-    setState(() {
-      _isButtonPressed = false;
-    });
-
     // 既存のタイマーをキャンセル
     _buttonResetTimer?.cancel();
 
@@ -109,10 +103,6 @@ class _MyHomePageState extends State<FallingAction> {
     // 最初の位置を画面上部に設定
     final initialPosition = -50.0; // 画面上部から少し上に配置
     final finalPosition = screenHeight - 50.0; // 画面下部に到達する位置
-
-    // 2から4秒の間で0.5秒刻みのランダムな時間を生成
-    final randomDuration =
-        (Random().nextInt(5) + 4) * 0.5; // 4から8の間の0.5刻みの数値を生成
 
     setState(() {
       _circlePositions.add(initialPosition);
