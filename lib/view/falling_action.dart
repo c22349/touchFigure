@@ -43,7 +43,7 @@ class _MyHomePageState extends State<FallingAction> {
     _buttonResetTimer?.cancel();
 
     // 1秒後にカウントダウン開始
-    _buttonResetTimer = Timer(const Duration(milliseconds: 1000), () {
+    _buttonResetTimer = Timer(AppConstants.countdownDelay, () {
       if (!mounted) return;
 
       final count = _buttonPressCount;
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<FallingAction> {
     _resetTimer?.cancel();
 
     // 2秒後にカウントをリセット
-    _resetTimer = Timer(const Duration(seconds: 2), () {
+    _resetTimer = Timer(AppConstants.resetDelay, () {
       if (mounted) {
         setState(() {
           _tapCount = 0;
