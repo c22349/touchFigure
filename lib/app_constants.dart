@@ -16,6 +16,5 @@ class AppConstants {
     Colors.pink,
     Colors.brown,
     Colors.grey,
-    Colors.teal,
   ];
 }
