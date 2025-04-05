@@ -183,14 +183,16 @@ class _MyHomePageState extends State<FallingAction> {
                   vertical: 6.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
+                  color: AppConstants.countBackgroundColor.withOpacity(
+                    AppConstants.countBackgroundOpacity,
+                  ),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Text(
                   '$_tapCount',
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.white,
+                    color: AppConstants.countTextColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
