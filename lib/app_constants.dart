@@ -6,6 +6,9 @@ class AppConstants {
   static const Color seedColor = Colors.deepPurple;
   static const Duration countdownDelay = Duration(milliseconds: 1000);
   static const Duration resetDelay = Duration(seconds: 2);
+  static const Color countBackgroundColor = Colors.black;
+  static const double countBackgroundOpacity = 0.7;
+  static const Color countTextColor = Colors.white;
   static const List<Color> circleColors = [
     Colors.blue,
     Colors.red,
