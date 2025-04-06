@@ -18,6 +18,7 @@ class _MyHomePageState extends State<FallingAction> {
   List<int> _circleKeys = []; // 各円の識別子を管理するリスト
   List<Color> _circleColors = []; // 各円の色を管理するリスト
   List<bool> _isExploding = []; // 破裂アニメーションの状態を管理
+  List<double> _circleSizes = []; // 円のサイズを管理するリスト
   int _tapCount = 0; // タップ回数を管理
   int _buttonPressCount = 0; // ボタンを押した回数を管理
   Timer? _resetTimer; // タイマーを管理
@@ -104,14 +105,18 @@ class _MyHomePageState extends State<FallingAction> {
     final initialPosition = -50.0; // 画面上部から少し上に配置
     final finalPosition = screenHeight - 50.0; // 画面下部に到達する位置
 
+    // ランダムなサイズを生成（25から100の間）
+    final randomSize = (Random().nextDouble() * 75 + 25);
+
     setState(() {
       _circlePositions.add(initialPosition);
       _circleHorizontalPositions.add(
-        Random().nextDouble() * (screenWidth - 50),
+        Random().nextDouble() * (screenWidth - randomSize),
       );
       _circleKeys.add(DateTime.now().millisecondsSinceEpoch);
       _circleColors.add(_getRandomColor());
       _isExploding.add(false);
+      _circleSizes.add(randomSize);
     });
 
     // アニメーションの開始を少し遅らせる
@@ -161,6 +166,7 @@ class _MyHomePageState extends State<FallingAction> {
           _circleKeys.removeAt(index);
           _circleColors.removeAt(index);
           _isExploding.removeAt(index);
+          _circleSizes.removeAt(index);
         });
       }
     });
@@ -236,8 +242,14 @@ class _MyHomePageState extends State<FallingAction> {
                   onTap: () => _handleTap(index),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    width: _isExploding[index] ? 100 : 50,
-                    height: _isExploding[index] ? 100 : 50,
+                    width:
+                        _isExploding[index]
+                            ? _circleSizes[index] * 2
+                            : _circleSizes[index],
+                    height:
+                        _isExploding[index]
+                            ? _circleSizes[index] * 2
+                            : _circleSizes[index],
                     decoration: BoxDecoration(
                       color:
                           _isExploding[index]
