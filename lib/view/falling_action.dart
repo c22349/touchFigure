@@ -256,6 +256,10 @@ class _MyHomePageState extends State<FallingAction> {
                               ? _circleColors[index].withOpacity(0)
                               : _circleColors[index],
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFf5f5f5),
+                        width: 1.0,
+                      ),
                     ),
                   ),
                 ),
