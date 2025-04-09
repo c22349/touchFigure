@@ -119,7 +119,7 @@ class _MyHomePageState extends State<FallingAction> {
       _circleSizes.add(randomSize);
     });
 
-    // アニメーションの開始を少し遅らせる
+    // アニメーション開始
     Future.delayed(const Duration(milliseconds: 50), () {
       if (mounted) {
         setState(() {
@@ -226,7 +226,7 @@ class _MyHomePageState extends State<FallingAction> {
                   style: const TextStyle(
                     fontSize: 72,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: AppConstants.countdownTextColor,
                   ),
                 ),
               ),
