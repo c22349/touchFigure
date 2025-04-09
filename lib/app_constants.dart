@@ -9,6 +9,7 @@ class AppConstants {
   static const Color countBackgroundColor = Colors.black;
   static const double countBackgroundOpacity = 0.7;
   static const Color countTextColor = Colors.white;
+  static const Color countdownTextColor = Colors.blue;
   static const List<Color> circleColors = [
     Colors.blue,
     Colors.red,
