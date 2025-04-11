@@ -257,7 +257,7 @@ class _MyHomePageState extends State<FallingAction> {
                               : _circleColors[index],
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFf5f5f5),
+                        color: AppConstants.circleBorderColor,
                         width: 1.0,
                       ),
                     ),
