@@ -25,6 +25,7 @@ class _MyHomePageState extends State<FallingAction> {
   Timer? _buttonResetTimer; // ボタンカウント用のタイマー
   bool _showCount = false; // カウント表示の制御
   String? _countdownText; // カウントダウンテキストを管理
+  bool _showStartButton = false; // 開始ボタンの表示制御
 
   @override
   void dispose() {
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<FallingAction> {
   void _startButtonPress() {
     setState(() {
       _buttonPressCount++;
+      _showStartButton = false; // 開始ボタンを非表示
     });
   }
 
@@ -43,8 +45,23 @@ class _MyHomePageState extends State<FallingAction> {
     // 既存のタイマーをキャンセル
     _buttonResetTimer?.cancel();
 
-    // 1秒後にカウントダウン開始
+    // 1秒後に開始ボタンを表示
     _buttonResetTimer = Timer(AppConstants.countdownDelay, () {
+      if (!mounted) return;
+
+      setState(() {
+        _showStartButton = true;
+      });
+    });
+  }
+
+  void _startGame() {
+    setState(() {
+      _showStartButton = false;
+    });
+
+    // 1秒後にカウントダウン開始
+    Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
 
       final count = _buttonPressCount;
@@ -230,6 +247,13 @@ class _MyHomePageState extends State<FallingAction> {
                   ),
                 ),
               ),
+            if (_showStartButton)
+              Center(
+                child: ElevatedButton(
+                  onPressed: _startGame,
+                  child: const Text('開始しますか？'),
+                ),
+              ),
             ...List.generate(_circlePositions.length, (index) {
               return AnimatedPositioned(
                 key: ValueKey(_circleKeys[index]),
@@ -257,7 +281,7 @@ class _MyHomePageState extends State<FallingAction> {
                               : _circleColors[index],
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppConstants.circleBorderColor,
+                        color: const Color(0xFFf5f5f5),
                         width: 1.0,
                       ),
                     ),
