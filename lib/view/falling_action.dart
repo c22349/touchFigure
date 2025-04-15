@@ -248,10 +248,15 @@ class _MyHomePageState extends State<FallingAction> {
                 ),
               ),
             if (_showStartButton)
-              Center(
-                child: ElevatedButton(
-                  onPressed: _startGame,
-                  child: const Text('開始しますか？'),
+              Positioned(
+                bottom: 50,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: _startGame,
+                    child: const Text('開始しますか？'),
+                  ),
                 ),
               ),
             ...List.generate(_circlePositions.length, (index) {
