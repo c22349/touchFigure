@@ -60,22 +60,22 @@ class _MyHomePageState extends State<FallingAction> {
       _showStartButton = false;
     });
 
-    // 1秒後にカウントダウン開始
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
-
-      final count = _buttonPressCount;
-      setState(() {
-        _buttonPressCount = 0;
-      });
-
-      // カウントダウン開始
-      _startCountdown(count);
+    final count = _buttonPressCount;
+    setState(() {
+      _buttonPressCount = 0;
     });
+
+    // カウントダウンを即座に開始
+    _startCountdown(count);
   }
 
   void _startCountdown(int circleCount) {
     int count = 3;
+
+    // 即座に最初のカウントダウンを表示
+    setState(() {
+      _countdownText = count.toString();
+    });
 
     // 3秒間のカウントダウン
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -83,10 +83,6 @@ class _MyHomePageState extends State<FallingAction> {
         timer.cancel();
         return;
       }
-
-      setState(() {
-        _countdownText = count.toString();
-      });
 
       count--;
 
@@ -109,6 +105,10 @@ class _MyHomePageState extends State<FallingAction> {
               });
             }
           }
+        });
+      } else {
+        setState(() {
+          _countdownText = count.toString();
         });
       }
     });
@@ -248,10 +248,15 @@ class _MyHomePageState extends State<FallingAction> {
                 ),
               ),
             if (_showStartButton)
-              Center(
-                child: ElevatedButton(
-                  onPressed: _startGame,
-                  child: const Text('開始しますか？'),
+              Positioned(
+                bottom: 50,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: _startGame,
+                    child: const Text('開始しますか？'),
+                  ),
                 ),
               ),
             ...List.generate(_circlePositions.length, (index) {
