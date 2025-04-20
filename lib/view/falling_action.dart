@@ -65,8 +65,11 @@ class _MyHomePageState extends State<FallingAction> {
       _buttonPressCount = 0;
     });
 
-    // カウントダウンを即座に開始
-    _startCountdown(count);
+    // 0.5秒後にカウントダウンを開始
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+      _startCountdown(count);
+    });
   }
 
   void _startCountdown(int circleCount) {
