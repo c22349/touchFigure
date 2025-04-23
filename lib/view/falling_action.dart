@@ -89,7 +89,7 @@ class _MyHomePageState extends State<FallingAction> {
 
       count--;
 
-      if (count < 0) {
+      if (count <= 0) {
         timer.cancel();
         setState(() {
           _countdownText = 'START!';
