@@ -266,7 +266,7 @@ class _MyHomePageState extends State<FallingAction> {
               return AnimatedPositioned(
                 key: ValueKey(_circleKeys[index]),
                 duration: Duration(
-                  milliseconds: ((Random().nextInt(5) + 4) * 500).toInt(),
+                  milliseconds: ((Random().nextInt(5) + 4) * 1000).toInt(),
                 ),
                 top: _circlePositions[index],
                 left: _circleHorizontalPositions[index],
